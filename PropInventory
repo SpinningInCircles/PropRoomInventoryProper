@@ -1,0 +1,64 @@
+import tkinter as tk
+import json
+
+mainInventory = tk.Tk()
+mainInventory.title("Prop Room Inventory")
+
+winWidth = 600
+winHeight = 400
+scrWidth = mainInventory.winfo_screenwidth()
+scrHeight = mainInventory.winfo_screenheight()
+midX = int(scrWidth / 2 - winWidth / 2)
+midY = int(scrHeight / 2 - winHeight / 2)
+
+mainInventory.geometry(f"{winWidth}x{winHeight}+{midX}+{midY}")
+
+props = dict()
+
+
+def propRegistry():
+    def saveProp():
+        pn = propName.get()
+        pq = int(propQuantity.get())
+        pc = propCondition.get()
+        pl = propLocation.get()
+
+        props[pn] = {"Quantity": pq,
+                     "Condition": pc,
+                     "Location": pl}
+        with open("prop_inventory.json", "w") as saveinv:
+            json.dump(props, saveinv)
+
+    propRegWin = tk.Tk()
+    propRegWin.title("Register a New Prop")
+
+    winWidth = 600
+    winHeight = 400
+    scrWidth = propRegWin.winfo_screenwidth()
+    scrHeight = propRegWin.winfo_screenheight()
+    midX = int(scrWidth / 2 - winWidth / 2)
+    midY = int(scrHeight / 2 - winHeight / 2)
+
+    propRegWin.geometry(f"{winWidth}x{winHeight}+{midX}+{midY}")
+
+    propName = tk.StringVar()
+    propCondition = tk.StringVar()
+    propLocation = tk.StringVar()
+
+    propName = tk.Entry(propRegWin, textvariable=propName)
+    propName.pack()
+    propQuantity = tk.Entry(propRegWin)
+    propQuantity.pack()
+    propCondition = tk.Entry(propRegWin, textvariable=propCondition)
+    propCondition.pack()
+    propLocation = tk.Entry(propRegWin, textvariable=propLocation)
+    propLocation.pack()
+
+    tk.Button(propRegWin, text="Save", command=saveProp).pack()
+
+    propRegWin.mainloop()
+
+
+tk.Button(mainInventory, text="Add Prop", command=propRegistry).pack()
+
+mainInventory.mainloop()
