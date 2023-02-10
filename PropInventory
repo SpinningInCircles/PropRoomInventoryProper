@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 import json
 
 mainInventory = tk.Tk()
@@ -13,25 +14,33 @@ midY = int(scrHeight / 2 - winHeight / 2)
 
 mainInventory.geometry(f"{winWidth}x{winHeight}+{midX}+{midY}")
 
-props = dict()
+props = {
+
+ }
+with open("prop_inventory.json", "w") as file:
+    json.dump(props, file)
 
 
 def propRegistry():
     def saveProp():
         pn = propName.get()
-        pq = int(propQuantity.get())
         pc = propCondition.get()
         pl = propLocation.get()
 
-        props[pn] = {"Quantity": pq,
-                     "Condition": pc,
-                     "Location": pl}
-        with open("prop_inventory.json", "w") as saveinv:
-            json.dump(props, saveinv)
+        x = {"Name": pn,
+             "Condition": pc,
+             "Location": pl}
+        props.update({pn:x})
+        with open("prop_inventory.json", "r+") as outfile:
+            file_data = json.load(outfile)
+            file_data.update(props[pn])
+            outfile.seek(0)
+            json.dump(file_data, outfile, indent=4)
+        messagebox.showinfo("Done!", "Prop saved!")
+        propRegWin.destroy()
+        return
 
     propRegWin = tk.Tk()
-    propRegWin.title("Register a New Prop")
-
     winWidth = 600
     winHeight = 400
     scrWidth = propRegWin.winfo_screenwidth()
@@ -45,12 +54,13 @@ def propRegistry():
     propCondition = tk.StringVar()
     propLocation = tk.StringVar()
 
+    tk.Label(propRegWin, text="Prop").pack()
     propName = tk.Entry(propRegWin, textvariable=propName)
     propName.pack()
-    propQuantity = tk.Entry(propRegWin)
-    propQuantity.pack()
+    tk.Label(propRegWin, text="Condition").pack()
     propCondition = tk.Entry(propRegWin, textvariable=propCondition)
     propCondition.pack()
+    tk.Label(propRegWin, text="Location").pack()
     propLocation = tk.Entry(propRegWin, textvariable=propLocation)
     propLocation.pack()
 
