@@ -1,5 +1,7 @@
 {
-    "Name": "Hat",
-    "Condition": "Torn",
-    "Location": "Hat Box"
+    "Basket": {
+        "Name": "Basket",
+        "Condition": "Unwoven",
+        "Location": "Counter"
+    }
 }

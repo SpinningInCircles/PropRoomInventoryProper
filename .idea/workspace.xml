@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="973a8792-13ba-43fb-923b-e5e9cd28170a" name="Default" comment="2/7 Nonsense">
+    <list default="true" id="973a8792-13ba-43fb-923b-e5e9cd28170a" name="Default" comment="2/10 Rage">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PropInventory" beforeDir="false" afterPath="$PROJECT_DIR$/PropInventory" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prop_inventory.json" beforeDir="false" afterPath="$PROJECT_DIR$/prop_inventory.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,7 +134,21 @@
       <option name="project" value="LOCAL" />
       <updated>1675886565970</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="2/10 Rage">
+      <created>1676060536810</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1676060536810</updated>
+    </task>
+    <task id="LOCAL-00003" summary="2/10 Rage">
+      <created>1676060586872</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1676060586872</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -161,7 +176,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="2/7 Nonsense" />
-    <option name="LAST_COMMIT_MESSAGE" value="2/7 Nonsense" />
+    <MESSAGE value="2/10 Rage" />
+    <option name="LAST_COMMIT_MESSAGE" value="2/10 Rage" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/yeah.py">
