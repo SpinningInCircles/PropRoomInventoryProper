@@ -1,12 +1,15 @@
+#-----Importing-----
 import tkinter as tk
+from tkinter import ttk
 from tkinter import messagebox
 import json
+import os
 
 mainInventory = tk.Tk()
 mainInventory.title("Prop Room Inventory")
 
-winWidth = 600
-winHeight = 400
+winWidth = 1200
+winHeight = 800
 scrWidth = mainInventory.winfo_screenwidth()
 scrHeight = mainInventory.winfo_screenheight()
 midX = int(scrWidth / 2 - winWidth / 2)
@@ -14,11 +17,10 @@ midY = int(scrHeight / 2 - winHeight / 2)
 
 mainInventory.geometry(f"{winWidth}x{winHeight}+{midX}+{midY}")
 
-props = {
-
- }
-with open("prop_inventory.json", "w") as file:
-    json.dump(props, file)
+if os.path.getsize("./prop_inventory.json") == 0:
+    x = list()
+    with open("prop_inventory.json", "w") as file:
+        json.dump(x, file)
 
 
 def propRegistry():
@@ -26,15 +28,20 @@ def propRegistry():
         pn = propName.get()
         pc = propCondition.get()
         pl = propLocation.get()
+        pd = propDesc.get()
 
-        x = {"Name": pn,
+        d = {"Name": pn,
              "Condition": pc,
-             "Location": pl}
+             "Location": pl,
+             "Description": pd,
+             "Check-in/out": True,
+             "Check-name": ""}
         with open("prop_inventory.json", "r+") as outfile:
             file_data = json.load(outfile)
-            file_data.update({pn:x})
+            file_data.append(d)
             outfile.seek(0)
             json.dump(file_data, outfile, indent=4)
+        inventoryTree.insert("", tk.END, values=(pn, pc, pl, pd, "In", d["Check-name"]))
         messagebox.showinfo("Done!", "Prop saved!")
         propRegWin.destroy()
         return
@@ -52,6 +59,7 @@ def propRegistry():
     propName = tk.StringVar()
     propCondition = tk.StringVar()
     propLocation = tk.StringVar()
+    propDesc = tk.StringVar()
 
     tk.Label(propRegWin, text="Prop").pack()
     propName = tk.Entry(propRegWin, textvariable=propName)
@@ -62,27 +70,125 @@ def propRegistry():
     tk.Label(propRegWin, text="Location").pack()
     propLocation = tk.Entry(propRegWin, textvariable=propLocation)
     propLocation.pack()
+    tk.Label(propRegWin, text="Description (opt.)").pack()
+    propDesc = tk.Entry(propRegWin, textvariable=propDesc)
+    propDesc.pack()
 
     tk.Button(propRegWin, text="Save", command=saveProp).pack()
 
     propRegWin.mainloop()
 
-def propSearch():
-    
-    propSearchWin = tk.Tk()
+
+def propSelected(event):
+    def delete():
+        answer = messagebox.askokcancel("Wait!", "Are you sure you want to delete this prop?")
+        if answer:
+            with open("prop_inventory.json", "r+") as outfile:
+                file_data = json.load(outfile)
+                file_data.pop(index)
+                outfile.seek(0)
+                json.dump(file_data, outfile, indent=4)
+                outfile.truncate()
+            inventoryTree.delete(selection)
+            messagebox.showinfo("Success", "Prop deleted!")
+    def check():
+        in_out = checkVar.get()
+        checkname = name.get()
+        with open("prop_inventory.json", "r+") as outfile:
+            file_data = json.load(outfile)
+            file_data[index]["Check-in/out"] = in_out
+            if not in_out and not checkname:
+                messagebox.showinfo("Uh-oh", "Please enter your name!")
+                return
+            elif not in_out:
+                file_data[index]["Check-name"] = checkname
+            if in_out:
+                file_data[index]["Check-name"] = ""
+            outfile.seek(0)
+            json.dump(file_data, outfile, indent=4)
+        if in_out:
+            messagebox.showinfo("Success", "Prop checked in!")
+        else:
+            messagebox.showinfo("Success", "Prop checked out!")
+        propInfo.destroy()
+
+    propInfo = tk.Tk()
+    propInfo.title("Prop Information")
+
     winWidth = 600
     winHeight = 400
-    scrWidth = propSearchWin.winfo_screenwidth()
-    scrHeight = propSearchWin.winfo_screenheight()
+    scrWidth = propInfo.winfo_screenwidth()
+    scrHeight = propInfo.winfo_screenheight()
     midX = int(scrWidth / 2 - winWidth / 2)
     midY = int(scrHeight / 2 - winHeight / 2)
 
-    propSearchWin.geometry(f"{winWidth}x{winHeight}+{midX}+{midY}")
+    propInfo.geometry(f"{winWidth}x{winHeight}+{midX}+{midY}")
 
-    propSearchWin.mainloop()
+    with open("prop_inventory.json", "r") as file:
+        prop_data = json.load(file)
 
+    focus = inventoryTree.focus()
+    index = inventoryTree.index(focus)
+    selection = inventoryTree.selection()
+
+    listbox = tk.Listbox(propInfo, height=7)
+    listbox.insert(1, prop_data[index]["Name"])
+    listbox.insert(2, prop_data[index]["Condition"])
+    listbox.insert(3, prop_data[index]["Location"])
+    listbox.insert(4, prop_data[index]["Description"])
+
+    listbox.pack()
+
+    checkVar = tk.BooleanVar()
+
+    tk.Label(propInfo, text="Check in or check out").pack()
+    check1 = tk.Radiobutton(propInfo, text="Check in", variable=checkVar, value=True)
+    check1.pack()
+    check2 = tk.Radiobutton(propInfo, text="Check out", variable=checkVar, value=False)
+    check2.pack()
+
+    name = tk.StringVar()
+    tk.Label(propInfo, text="Your name? (Leave blank if checking in)").pack()
+    nameEntry = tk.Entry(propInfo, textvariable=name)
+    nameEntry.pack()
+    
+    tk.Button(propInfo, text="Save", command=check).pack()
+    tk.Button(propInfo, text="Delete Prop", command=delete).pack()
+
+    propInfo.mainloop()
+
+
+with open("prop_inventory.json", "r") as file:
+    prop_data = json.load(file)
+
+columns = ("names", "condition", "location", "description", "in/out", "check-name")
+inventoryTree = ttk.Treeview(mainInventory, columns=columns, show="headings")
+
+inventoryTree.heading("names", text="Name")
+inventoryTree.heading("condition", text="Condition")
+inventoryTree.heading("location", text="Location")
+inventoryTree.heading("description", text="Description")
+inventoryTree.heading("in/out", text="Check-in/out")
+inventoryTree.heading("check-name", text="By who?")
+
+for index, value in enumerate(prop_data):
+    x = " "
+    if prop_data[index]["Check-in/out"]:
+        x = "In"
+    elif not prop_data[index]["Check-in/out"]:
+        x = "Out"
+    inventoryTree.insert("", tk.END, values=(
+        prop_data[index]["Name"],
+        prop_data[index]["Condition"],
+        prop_data[index]["Location"],
+        prop_data[index]["Description"],
+        x,
+        prop_data[index]["Check-name"])
+                         )
+
+inventoryTree.bind("<<TreeviewSelect>>", propSelected)
+inventoryTree.pack()
 
 tk.Button(mainInventory, text="Add Prop", command=propRegistry).pack()
-tk.Button(mainInventory, text="Search Registry", command=propSearch).pack()
 
 mainInventory.mainloop()

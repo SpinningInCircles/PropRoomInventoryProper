@@ -1,7 +1,10 @@
-{
-    "Basket": {
-        "Name": "Basket",
-        "Condition": "Unwoven",
-        "Location": "Counter"
+[
+    {
+        "Name": "Kitty",
+        "Condition": "Soft",
+        "Location": "Floor",
+        "Description": "Cute little kitty",
+        "Check-in/out": false,
+        "Check-name": "Sammy"
     }
-}
+]
