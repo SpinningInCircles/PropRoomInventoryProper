@@ -1,10 +1,10 @@
 [
     {
-        "Name": "Kitty",
-        "Condition": "Soft",
-        "Location": "Floor",
-        "Description": "Cute little kitty",
-        "Check-in/out": false,
-        "Check-name": "Sammy"
+        "Name": "Rope",
+        "Condition": "Frayed",
+        "Location": "Kink Box",
+        "Description": "Used in Clue",
+        "Check-in/out": true,
+        "Check-name": ""
     }
 ]

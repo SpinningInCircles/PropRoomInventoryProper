@@ -48,7 +48,7 @@ def register():
         else:
             messagebox.showinfo("Uh-oh", "Username or Password is invalid.")
             return
-    regWindow = tk.Tk()
+    regWindow = tk.Toplevel()
     regWindow.title("Registry")
 
     winWidth = 600
@@ -79,6 +79,7 @@ def login():
     def findUser(user, password):
         user = user.get()
         password = password.get()
+        success = None
 
         f = open("user_info.json")
         user_data = json.load(f)
@@ -97,7 +98,7 @@ def login():
         if not success:
             messagebox.showinfo("Oops!", "The username you entered is not registered :(")
 
-    logWindow = tk.Tk()
+    logWindow = tk.Toplevel()
 
     winWidth = 600
     winHeight = 400
